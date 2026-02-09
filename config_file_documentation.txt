@@ -194,8 +194,9 @@ Config file must be valid JSON format. Examples can be found in the test_data fo
 
       "winnerElectionMode" required
         whether the program should apply a special process for selecting the winner(s)
-        value: "singleWinnerMajority" | "multiWinnerAllowOnlyOneWinnerPerRound" | "multiWinnerAllowMultipleWinnersPerRound" | "bottomsUp" | "bottomsUpUsingPercentageThreshold" | "multiPassIrv"
+        value: "singleWinnerMajority" | "condorcet" | "multiWinnerAllowOnlyOneWinnerPerRound" | "multiWinnerAllowMultipleWinnersPerRound" | "bottomsUp" | "bottomsUpUsingPercentageThreshold" | "multiPassIrv"
         "singleWinnerMajority": no special process (only valid when numberOfWinners = 1)
+        "condorcet": determine the winner using pairwise (head-to-head) comparisons; if a Condorcet winner exists (beats all others head-to-head), they are elected; otherwise the candidate with the most head-to-head wins is elected (a tie counts as half a win); if multiple candidates tie for the most wins, the one whose smallest loss margin is smallest is elected; if still tied, fall back to the configured tiebreakMode (only valid when numberOfWinners = 1)
         "multiWinnerAllowOnlyOneWinnerPerRound": elect no more than one winner per round, even when there are multiple candidates exceeding the winning threshold (only valid when numberOfWinners is > 1)
         "multiWinnerAllowMultipleWinnersPerRound": may elect more than one winner per round when there are multiple candidates exceeding the winning threshold (only valid when numberOfWinners is > 1)
         "bottomsUp": instead of running a standard multi-seat contest with single transferable votes, just eliminate candidates until there are numberOfWinners remaining (only valid when numberOfWinners is > 1)
@@ -272,5 +273,10 @@ Config file must be valid JSON format. Examples can be found in the test_data fo
 
       "exhaustOnDuplicateCandidate" optional
         tabulator will exhaust a ballot when it encounters a duplicate candidate (instead of just skipping the duplicate)
+        value: true | false
+        if not supplied: false
+
+      "condorcetCountAllRankedOverUnranked" optional
+        when winnerElectionMode is "condorcet", all ranked candidates are treated as preferred above all unranked candidates regardless of skipped ranks; if false, a ranked candidate is only preferred above an unranked candidate if no rank below the ranked candidate's rank was skipped (only valid when winnerElectionMode is "condorcet")
         value: true | false
         if not supplied: false

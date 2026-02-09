@@ -14,6 +14,8 @@ Winner Election Mode (required): What process to use for selecting winner(s) for
 
   * Multi-pass IRV: Elects multiple winners. Eliminate candidates one-by-one or using batch elimination until only two candidates remain. Candidate with the most votes at the end wins. Run a new set of rounds with any winning candidates ignored.
 
+  * Condorcet: Elects one winner using pairwise (head-to-head) comparisons. If a Condorcet winner exists (a candidate who beats every other candidate head-to-head), they are elected. Otherwise, the candidate with the most head-to-head wins is elected. Ties in head-to-head wins are broken by smallest loss margin, then by the configured Tiebreak Mode.
+
 Maximum Number of Candidates That Can Be Ranked: How many rankings each voter has in this contest.
 
 Minimum Vote Threshold: The number of first-choice votes a candidate must receive in order to remain in the race. Most jurisdictions do not set a minimum vote threshold.
@@ -28,7 +30,9 @@ Continue until Two Candidates Remain: Single-winner ranked-choice voting electio
 
 First Round Determines Threshold: For single-winner contests, keeps the threshold to elect static based on the first round active ballots, rather than dynamically changing round by round as ballots go inactive.
 
-Tiebreak Mode (required): Ties in ranked-choice voting contests can occur when eliminating candidates or when electing candidates. Multi-winner contests can have ties between candidates who have both crossed the threshold of election; in that case ties are broken to determine whose surplus vote value transfers first. Tiebreak procedures are set in law, either in the ranked-choice voting law used in your jurisdiction or in the elections code more generally. Select the option from this list that complies with law and procedure in your jurisdiction.
+Condorcet: Count All Ranked Candidates Above Unranked: When Winner Election Mode is "Condorcet", this option controls how unranked candidates are treated in pairwise comparisons. When checked, all ranked candidates on a ballot are counted as preferred above all unranked candidates, regardless of any skipped ranks. When unchecked, a ranked candidate is only counted as preferred above an unranked candidate if no rank below the ranked candidate's position was skipped. Available only when Winner Election Mode is "Condorcet."
+
+Tiebreak Mode (required): Ties in ranked-choice voting contests can occur when eliminating candidates or when electing candidates. Multi-winner contests can have ties between candidates who have both crossed the threshold of election; in that case ties are broken to determine whose surplus vote value transfers first. Tiebreak procedures are set in law, either in the ranked-choice voting law used in your jurisdiction or in the elections code more generally. Select the option from this list that complies with law and procedure in your jurisdiction. When Winner Election Mode is "Condorcet", only "Random" is available as the Tiebreak Mode.
 
   * Random: Randomly select a tied candidate to eliminate or, in multi-winner contests only, elect. Requires a random seed.
 

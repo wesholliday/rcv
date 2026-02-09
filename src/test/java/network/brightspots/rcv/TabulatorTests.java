@@ -379,7 +379,9 @@ class TabulatorTests {
       ContestConfig config, String stem, String timestampString, Integer sequentialId) {
     compareFiles(config, stem, OutputType.DETAILED_JSON, timestampString, sequentialId, false);
     compareFiles(config, stem, OutputType.DETAILED_CSV, timestampString, sequentialId, false);
-    compareExtendedSummaryToSummary(config, timestampString, sequentialId);
+    if (!config.isCondorcetEnabled()) {
+      compareExtendedSummaryToSummary(config, timestampString, sequentialId);
+    }
     if (config.isGenerateCdfJsonEnabled()) {
       compareFiles(config, stem, OutputType.CDF_CVR, timestampString, sequentialId, false);
     }
@@ -948,6 +950,69 @@ class TabulatorTests {
   @DisplayName("continue until two threshold freeze test")
   void continueUntilTwoThresholdFreeze() {
     runTabulationTest("continue_until_two_threshold_freeze");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Basic test")
+  void condorcetTest() {
+    runTabulationTest("condorcet_test");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Cycle resolved by smallest loss margin")
+  void condorcetCycleTest() {
+    runTabulationTest("condorcet_cycle_test");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Skipped ranks affect pairwise preferences")
+  void condorcetSkipTest() {
+    runTabulationTest("condorcet_skip_test");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Symmetric cycle falls back to tiebreak")
+  void condorcetTiebreakTest() {
+    runTabulationTest("condorcet_tiebreak_test");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Overvotes treated as tied")
+  void condorcetOvervoteTest() {
+    runTabulationTest("condorcet_overvote_test");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Two candidates")
+  void condorcetTwoCandidateTest() {
+    runTabulationTest("condorcet_two_candidate_test");
+  }
+
+  @Test
+  @DisplayName("Condorcet - Invalid params rejected")
+  void condorcetInvalidParamsTest() {
+    String configPath = getTestFilePath("condorcet_invalid_params_test", "_config.json");
+    ContestConfig config = ContestConfig.loadContestConfig(configPath);
+    assertNotNull(config);
+    var errors = config.validate();
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_BATCH_ELIMINATION_DISAGREEMENT));
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_CONTINUE_UNTIL_TWO_DISAGREEMENT));
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_STOP_EARLY_AFTER_ROUND_DISAGREEMENT));
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_TIEBREAK_NOT_RANDOM));
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_MULTI_WINNER_DISAGREEMENT));
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_TABULATE_BY_SLICE_DISAGREEMENT));
+  }
+
+  @Test
+  @DisplayName("Condorcet - Count all ranked above unranked changes outcome")
+  void condorcetCountAllRankedTest() {
+    runTabulationTest("condorcet_count_all_ranked_test");
   }
 
   @Test

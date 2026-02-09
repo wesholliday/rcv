@@ -57,6 +57,7 @@ class ContestConfig {
   static final boolean SUGGESTED_CUTOFF_ELIMINATION = false;
   static final boolean SUGGESTED_CONTINUE_UNTIL_TWO_CANDIDATES_REMAIN = false;
   static final boolean SUGGESTED_EXHAUST_ON_DUPLICATE_CANDIDATES = false;
+  static final boolean SUGGESTED_CONDORCET_COUNT_ALL_RANKED_OVER_UNRANKED = false;
   static final boolean SUGGESTED_FIRST_ROUND_DETERMINES_THRESHOLD = false;
   static final boolean SUGGESTED_TREAT_BLANK_AS_UNDECLARED_WRITE_IN = false;
   static final int SUGGESTED_CVR_FIRST_VOTE_COLUMN = 4;
@@ -818,11 +819,56 @@ class ContestConfig {
                 "doesFirstRoundDetermineThreshold can't be true in a multi-seat contest!");
           }
         } else { // numberOfWinners == 1
-          if (!isSingleWinnerEnabled()) {
+          if (!isSingleWinnerEnabled() && !isCondorcetEnabled()) {
             validationErrors.add(
                 ValidationError.RULES_WINNER_ELECTION_MODE_INVALID_FOR_SINGLE_SEAT);
             Logger.severe(
                 "winnerElectionMode can't be \"%s\" in a single-seat contest!", winnerMode);
+          }
+        }
+
+        if (isCondorcetEnabled()) {
+          if (getNumberOfWinners() != 1) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_MULTI_WINNER_DISAGREEMENT);
+            Logger.severe(
+                "numberOfWinners must be 1 when winnerElectionMode is \"%s\"!",
+                winnerMode);
+          }
+          if (isBatchEliminationEnabled()) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_BATCH_ELIMINATION_DISAGREEMENT);
+            Logger.severe(
+                "batchElimination can't be true when winnerElectionMode is \"%s\"!",
+                winnerMode);
+          }
+          if (isContinueUntilTwoCandidatesRemainEnabled()) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_CONTINUE_UNTIL_TWO_DISAGREEMENT);
+            Logger.severe(
+                "continueUntilTwoCandidatesRemain can't be true when winnerElectionMode "
+                    + "is \"%s\"!", winnerMode);
+          }
+          if (!isNullOrBlank(getStopTabulationEarlyAfterRoundRaw())) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_STOP_EARLY_AFTER_ROUND_DISAGREEMENT);
+            Logger.severe(
+                "stopTabulationEarlyAfterRound can't be set when winnerElectionMode "
+                    + "is \"%s\"!", winnerMode);
+          }
+          if (getTiebreakMode() != TiebreakMode.RANDOM) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_TIEBREAK_NOT_RANDOM);
+            Logger.severe(
+                "tiebreakMode must be \"%s\" when winnerElectionMode is \"%s\"!",
+                TiebreakMode.RANDOM, winnerMode);
+          }
+          if (!enabledSlices().isEmpty()) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_TABULATE_BY_SLICE_DISAGREEMENT);
+            Logger.severe(
+                "tabulateByPrecinct and tabulateByBatch can't be enabled when "
+                    + "winnerElectionMode is \"%s\"!", winnerMode);
           }
         }
       } else { // numberOfWinners == 0
@@ -873,6 +919,14 @@ class ContestConfig {
           ValidationError.RULES_NON_INTEGER_WINNING_THRESHOLD_HARE_QUOTA_DISAGREEMENT);
       Logger.severe(
           "nonIntegerWinningThreshold and hareQuota can't both be true at the same time!");
+    }
+
+    if (isCondorcetCountAllRankedOverUnrankedEnabled() && !isCondorcetEnabled()) {
+      validationErrors.add(
+          ValidationError.RULES_CONDORCET_COUNT_ALL_RANKED_REQUIRES_CONDORCET);
+      Logger.severe(
+          "condorcetCountAllRankedOverUnranked can't be true when winnerElectionMode "
+              + "is \"%s\"!", winnerMode);
     }
   }
 
@@ -1009,6 +1063,14 @@ class ContestConfig {
 
   boolean isMultiSeatSequentialWinnerTakesAllEnabled() {
     return getWinnerElectionMode() == WinnerElectionMode.MULTI_SEAT_SEQUENTIAL_WINNER_TAKES_ALL;
+  }
+
+  boolean isCondorcetEnabled() {
+    return getWinnerElectionMode() == WinnerElectionMode.CONDORCET;
+  }
+
+  boolean isCondorcetCountAllRankedOverUnrankedEnabled() {
+    return rawConfig.rules.condorcetCountAllRankedOverUnranked;
   }
 
   boolean isNonIntegerWinningThresholdEnabled() {
@@ -1352,7 +1414,14 @@ class ContestConfig {
     RULES_BOTTOMS_UP_THRESHOLD_BATCH_ELIMINATION_DISAGREEMENT,
     RULES_NON_INTEGER_WINNING_THRESHOLD_WINNER_ELECTION_MODE_DISAGREEMENT,
     RULES_HARE_QUOTA_WINNER_ELECTION_MODE_DISAGREEMENT,
-    RULES_NON_INTEGER_WINNING_THRESHOLD_HARE_QUOTA_DISAGREEMENT
+    RULES_NON_INTEGER_WINNING_THRESHOLD_HARE_QUOTA_DISAGREEMENT,
+    RULES_CONDORCET_MULTI_WINNER_DISAGREEMENT,
+    RULES_CONDORCET_BATCH_ELIMINATION_DISAGREEMENT,
+    RULES_CONDORCET_CONTINUE_UNTIL_TWO_DISAGREEMENT,
+    RULES_CONDORCET_STOP_EARLY_AFTER_ROUND_DISAGREEMENT,
+    RULES_CONDORCET_COUNT_ALL_RANKED_REQUIRES_CONDORCET,
+    RULES_CONDORCET_TIEBREAK_NOT_RANDOM,
+    RULES_CONDORCET_TABULATE_BY_SLICE_DISAGREEMENT
   }
 
   enum Provider {

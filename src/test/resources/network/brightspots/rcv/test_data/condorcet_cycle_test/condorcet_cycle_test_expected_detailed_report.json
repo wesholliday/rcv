@@ -1,0 +1,76 @@
+{
+  "config" : {
+    "contest" : "Condorcet Cycle Test",
+    "date" : "2024-01-01",
+    "generatedBy" : "RCTab 2.0.1",
+    "jurisdiction" : "Test Jurisdiction",
+    "office" : "Test Office"
+  },
+  "jsonFormatVersion" : "1",
+  "results" : {
+    "bestHeadToHeadRecord" : [ {
+      "candidate" : "Alice",
+      "marginOfSmallestLoss" : 1
+    }, {
+      "candidate" : "Bob",
+      "marginOfSmallestLoss" : 3
+    }, {
+      "candidate" : "Carol",
+      "marginOfSmallestLoss" : 3
+    } ],
+    "candidateSummary" : [ {
+      "candidate" : "Alice",
+      "losses" : 1,
+      "ties" : 0,
+      "wins" : 1
+    }, {
+      "candidate" : "Bob",
+      "losses" : 1,
+      "ties" : 0,
+      "wins" : 1
+    }, {
+      "candidate" : "Carol",
+      "losses" : 1,
+      "ties" : 0,
+      "wins" : 1
+    } ],
+    "pairwise" : [ {
+      "aAboveB" : 5,
+      "bAboveA" : 2,
+      "candidateA" : "Alice",
+      "candidateB" : "Bob",
+      "margin" : 3,
+      "neitherRanked" : 0,
+      "oneRankedNoPreference" : 0,
+      "tied" : 0,
+      "winner" : "Alice"
+    }, {
+      "aAboveB" : 4,
+      "bAboveA" : 3,
+      "candidateA" : "Carol",
+      "candidateB" : "Alice",
+      "margin" : 1,
+      "neitherRanked" : 0,
+      "oneRankedNoPreference" : 0,
+      "tied" : 0,
+      "winner" : "Carol"
+    }, {
+      "aAboveB" : 5,
+      "bAboveA" : 2,
+      "candidateA" : "Bob",
+      "candidateB" : "Carol",
+      "margin" : 3,
+      "neitherRanked" : 0,
+      "oneRankedNoPreference" : 0,
+      "tied" : 0,
+      "winner" : "Bob"
+    } ],
+    "winner" : "Alice"
+  },
+  "summary" : {
+    "ballotsWithNoRankings" : 0,
+    "numCandidates" : 3,
+    "numWinners" : 1,
+    "totalNumBallots" : "7"
+  }
+}

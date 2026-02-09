@@ -279,6 +279,8 @@ public class GuiConfigController implements Initializable {
   @FXML
   private CheckBox checkBoxExhaustOnDuplicateCandidate;
   @FXML
+  private CheckBox checkBoxCondorcetCountAllRankedOverUnranked;
+  @FXML
   private MenuBar menuBar;
   @FXML
   private TabPane tabPane;
@@ -1069,6 +1071,8 @@ public class GuiConfigController implements Initializable {
     checkBoxContinueUntilTwoCandidatesRemain.setDisable(true);
     checkBoxFirstRoundDeterminesThreshold.setSelected(false);
     checkBoxFirstRoundDeterminesThreshold.setDisable(true);
+    checkBoxCondorcetCountAllRankedOverUnranked.setSelected(false);
+    checkBoxCondorcetCountAllRankedOverUnranked.setDisable(true);
     choiceTiebreakMode.setValue(null);
     choiceTiebreakMode.setDisable(true);
     clearAndDisableTiebreakFields();
@@ -1100,6 +1104,8 @@ public class GuiConfigController implements Initializable {
         .setSelected(ContestConfig.SUGGESTED_CONTINUE_UNTIL_TWO_CANDIDATES_REMAIN);
     checkBoxFirstRoundDeterminesThreshold
             .setSelected(ContestConfig.SUGGESTED_FIRST_ROUND_DETERMINES_THRESHOLD);
+    checkBoxCondorcetCountAllRankedOverUnranked
+        .setSelected(ContestConfig.SUGGESTED_CONDORCET_COUNT_ALL_RANKED_OVER_UNRANKED);
     textFieldDecimalPlacesForVoteArithmetic.setText(
         String.valueOf(ContestConfig.SUGGESTED_DECIMAL_PLACES_FOR_VOTE_ARITHMETIC));
     checkBoxMaxRankingsAllowedMax.setSelected(ContestConfig.SUGGESTED_MAX_RANKINGS_ALLOWED_MAXIMUM);
@@ -1527,7 +1533,18 @@ public class GuiConfigController implements Initializable {
       checkBoxMaxRankingsAllowedMax.setDisable(false);
       checkBoxCutoffElimination.setDisable(true);
       textFieldStopTabulationEarlyAfterRound.setDisable(false);
+      choiceTiebreakMode.getItems().clear();
+      choiceTiebreakMode.getItems().addAll(TiebreakMode.values());
+      choiceTiebreakMode.getItems().remove(TiebreakMode.MODE_UNKNOWN);
       choiceTiebreakMode.setDisable(false);
+      // Re-enable voter error rules (may be disabled by Condorcet)
+      radioOvervoteAlwaysSkip.setDisable(false);
+      radioOvervoteExhaustImmediately.setDisable(false);
+      radioOvervoteExhaustIfMultiple.setDisable(false);
+      textFieldMaxSkippedRanksAllowed.setDisable(
+          checkBoxMaxSkippedRanksAllowedUnlimited.isSelected());
+      checkBoxMaxSkippedRanksAllowedUnlimited.setDisable(false);
+      checkBoxExhaustOnDuplicateCandidate.setDisable(false);
       switch (getWinnerElectionModeChoice(choiceWinnerElectionMode)) {
         case STANDARD_SINGLE_WINNER -> {
           checkBoxBatchElimination.setDisable(false);
@@ -1556,6 +1573,28 @@ public class GuiConfigController implements Initializable {
           checkBoxFirstRoundDeterminesThreshold.setDisable(false);
           textFieldMultiSeatBottomsUpPercentageThreshold.setDisable(false);
           checkBoxCutoffElimination.setDisable(false);
+        }
+        case CONDORCET -> {
+          textFieldNumberOfWinners.setText("1");
+          textFieldStopTabulationEarlyAfterRound.setDisable(true);
+          checkBoxCondorcetCountAllRankedOverUnranked.setDisable(false);
+          choiceTiebreakMode.getItems().clear();
+          choiceTiebreakMode.getItems().add(TiebreakMode.RANDOM);
+          choiceTiebreakMode.setValue(TiebreakMode.RANDOM);
+          textFieldRandomSeed.setDisable(false);
+          // Voter error rules don't apply to Condorcet; set defaults and disable
+          radioOvervoteAlwaysSkip.setSelected(true);
+          radioOvervoteExhaustImmediately.setSelected(false);
+          radioOvervoteExhaustIfMultiple.setSelected(false);
+          radioOvervoteAlwaysSkip.setDisable(true);
+          radioOvervoteExhaustImmediately.setDisable(true);
+          radioOvervoteExhaustIfMultiple.setDisable(true);
+          checkBoxMaxSkippedRanksAllowedUnlimited.setSelected(true);
+          textFieldMaxSkippedRanksAllowed.clear();
+          textFieldMaxSkippedRanksAllowed.setDisable(true);
+          checkBoxMaxSkippedRanksAllowedUnlimited.setDisable(true);
+          checkBoxExhaustOnDuplicateCandidate.setSelected(false);
+          checkBoxExhaustOnDuplicateCandidate.setDisable(true);
         }
         case MODE_UNKNOWN -> {
           // Do nothing
@@ -1712,6 +1751,8 @@ public class GuiConfigController implements Initializable {
     checkBoxFirstRoundDeterminesThreshold.setSelected(rules.doesFirstRoundDetermineThreshold);
     textFieldStopTabulationEarlyAfterRound.setText(rules.stopTabulationEarlyAfterRound);
     checkBoxExhaustOnDuplicateCandidate.setSelected(rules.exhaustOnDuplicateCandidate);
+    checkBoxCondorcetCountAllRankedOverUnranked
+        .setSelected(rules.condorcetCountAllRankedOverUnranked);
   }
 
   private void setThresholdCalculationMethodRadioButton(boolean nonIntegerWinningThreshold,
@@ -1807,6 +1848,8 @@ public class GuiConfigController implements Initializable {
     rules.stopTabulationEarlyAfterRound =
         getTextOrEmptyString(textFieldStopTabulationEarlyAfterRound);
     rules.exhaustOnDuplicateCandidate = checkBoxExhaustOnDuplicateCandidate.isSelected();
+    rules.condorcetCountAllRankedOverUnranked =
+        checkBoxCondorcetCountAllRankedOverUnranked.isSelected();
     rules.rulesDescription = getTextOrEmptyString(textFieldRulesDescription);
     config.rules = rules;
 

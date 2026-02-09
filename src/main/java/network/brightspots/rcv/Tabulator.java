@@ -94,6 +94,8 @@ final class Tabulator {
   private final Map<Integer, BigDecimal> roundToResidualSurplus = new HashMap<>();
   // cast vote record metadata on which tabulation can be "split", such as precinct or batch
   private final SliceIdSet sliceIds = new SliceIdSet();
+  // stores the Condorcet pairwise results (null if not a Condorcet election)
+  private CondorcetTabulator.CondorcetResult condorcetResult;
   // tracks the current round (and when tabulation is completed, the total number of rounds)
   private int currentRound = 0;
 
@@ -169,6 +171,10 @@ final class Tabulator {
     }
 
     logSummaryInfo();
+
+    if (config.isCondorcetEnabled()) {
+      return tabulateCondorcet();
+    }
 
     // Loop until we've found our winner(s), with a couple exceptions:
     // - If continueUntilTwoCandidatesRemain is true, we loop until only two
@@ -281,6 +287,41 @@ final class Tabulator {
         updateWinnerTallies();
       }
     }
+    return winnerToRound.keySet();
+  }
+
+  // Condorcet tabulation: compute first-choice tallies for display, then determine the
+  // Condorcet winner using pairwise comparisons.
+  private Set<String> tabulateCondorcet() throws TabulationAbortedException {
+    currentRound = 1;
+
+    // Compute first-choice vote tallies (for display in output reports)
+    RoundTally currentRoundTally = computeTalliesForRound(currentRound);
+    roundTallies.put(currentRound, currentRoundTally);
+    roundToResidualSurplus.put(currentRound, BigDecimal.ZERO);
+
+    // Determine the winner using the Condorcet method
+    condorcetResult = CondorcetTabulator.determineWinner(castVoteRecords, candidateNames, config);
+    String winner = condorcetResult.winner();
+
+    // Set the winning threshold to the winner's first-choice vote tally for display purposes
+    BigDecimal winnerTally = currentRoundTally.getCandidateTally(winner);
+    if (winnerTally == null) {
+      winnerTally = BigDecimal.ZERO;
+    }
+    setWinningThreshold(currentRound, winnerTally);
+
+    // Record the winner
+    winnerToRound.put(winner, currentRound);
+    List<TallyDecision> decisions = new LinkedList<>();
+    decisions.add(
+        new TallyDecision(winner, TallyDecision.DecisionType.ELECTED,
+            condorcetResult.wasDecidedViaTieBreak(), currentRound));
+    roundToDecisions.put(currentRound, decisions);
+
+    Logger.info(
+        "Condorcet tabulation complete. Winner: \"%s\" with %s first-choice vote(s).",
+        winner, winnerTally);
     return winnerToRound.keySet();
   }
 
@@ -850,7 +891,8 @@ final class Tabulator {
             .setContestConfig(config)
             .setTimestampString(timestamp)
             .setSliceIds(sliceIds)
-            .setRoundToResidualSurplus(roundToResidualSurplus);
+            .setRoundToResidualSurplus(roundToResidualSurplus)
+            .setCondorcetResult(condorcetResult);
 
     List<String> candidateOrder = roundTallies.get(1).getSortedCandidatesByTally();
     writer.generateContestResultFiles(roundTallies, tallyTransfers, candidateOrder);
@@ -1394,6 +1436,7 @@ final class Tabulator {
     MULTI_SEAT_BOTTOMS_UP_USING_PERCENTAGE_THRESHOLD(
         "bottomsUpUsingPercentageThreshold", "Bottoms-up using percentage threshold"),
     MULTI_SEAT_SEQUENTIAL_WINNER_TAKES_ALL("multiPassIrv", "Multi-pass IRV"),
+    CONDORCET("condorcet", "Condorcet"),
     MODE_UNKNOWN("modeUnknown", "Unknown mode");
 
     private final String internalLabel;

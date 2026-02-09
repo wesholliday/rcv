@@ -422,6 +422,8 @@ public class RawContestConfig {
     public boolean continueUntilTwoCandidatesRemain;
     public String stopTabulationEarlyAfterRound;
     public boolean exhaustOnDuplicateCandidate;
+    /** If true, all ranked candidates are preferred over unranked, ignoring skipped ranks. */
+    public boolean condorcetCountAllRankedOverUnranked;
     public String rulesDescription;
 
     // These are deprecated (moved to individual CVRs), but we need to leave them in place here for

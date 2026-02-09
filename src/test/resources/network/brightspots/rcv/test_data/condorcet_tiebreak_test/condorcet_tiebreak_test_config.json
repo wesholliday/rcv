@@ -1,0 +1,59 @@
+{
+  "tabulatorVersion" : "TEST",
+  "outputSettings" : {
+    "contestName" : "Condorcet Tiebreak Test",
+    "outputDirectory" : "output",
+    "contestDate" : "2024-01-01",
+    "contestJurisdiction" : "Test Jurisdiction",
+    "contestOffice" : "Test Office",
+    "tabulateByBatch" : false,
+    "tabulateByPrecinct" : false,
+    "generateCdfJson" : false
+  },
+  "cvrFileSources" : [ {
+    "filePath" : "condorcet_tiebreak_test_cvr.csv",
+    "contestId" : "",
+    "firstVoteColumnIndex" : "3",
+    "firstVoteRowIndex" : "2",
+    "idColumnIndex" : "1",
+    "precinctColumnIndex" : "2",
+    "overvoteDelimiter" : "",
+    "provider" : "genericCsv",
+    "overvoteLabel" : "",
+    "skippedRankLabel" : "",
+    "undeclaredWriteInLabel" : "",
+    "treatBlankAsUndeclaredWriteIn" : false
+  } ],
+  "candidates" : [ {
+    "name" : "Alice",
+    "excluded" : false,
+    "aliases" : [ ]
+  }, {
+    "name" : "Bob",
+    "excluded" : false,
+    "aliases" : [ ]
+  }, {
+    "name" : "Carol",
+    "excluded" : false,
+    "aliases" : [ ]
+  } ],
+  "rules" : {
+    "tiebreakMode" : "random",
+    "overvoteRule" : "exhaustImmediately",
+    "winnerElectionMode" : "condorcet",
+    "randomSeed" : "12345",
+    "numberOfWinners" : "1",
+    "multiSeatBottomsUpPercentageThreshold" : "",
+    "decimalPlacesForVoteArithmetic" : "4",
+    "maxSkippedRanksAllowed" : "unlimited",
+    "maxRankingsAllowed" : "max",
+    "nonIntegerWinningThreshold" : false,
+    "doesFirstRoundDetermineThreshold" : false,
+    "hareQuota" : false,
+    "batchElimination" : false,
+    "continueUntilTwoCandidatesRemain" : false,
+    "stopTabulationEarlyAfterRound" : "",
+    "exhaustOnDuplicateCandidate" : false,
+    "rulesDescription" : "Condorcet Tiebreak Test Rules"
+  }
+}

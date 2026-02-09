@@ -1,0 +1,55 @@
+{
+  "tabulatorVersion" : "TEST",
+  "outputSettings" : {
+    "contestName" : "Condorcet Invalid Params Test",
+    "outputDirectory" : "output",
+    "contestDate" : "2024-01-01",
+    "contestJurisdiction" : "Test Jurisdiction",
+    "contestOffice" : "Test Office",
+    "tabulateByBatch" : false,
+    "tabulateByPrecinct" : true,
+    "generateCdfJson" : false
+  },
+  "cvrFileSources" : [ {
+    "filePath" : "condorcet_invalid_params_test_cvr.csv",
+    "contestId" : "",
+    "firstVoteColumnIndex" : "3",
+    "firstVoteRowIndex" : "2",
+    "idColumnIndex" : "1",
+    "precinctColumnIndex" : "2",
+    "overvoteDelimiter" : "",
+    "provider" : "genericCsv",
+    "overvoteLabel" : "",
+    "skippedRankLabel" : "",
+    "undeclaredWriteInLabel" : "",
+    "treatBlankAsUndeclaredWriteIn" : false
+  } ],
+  "candidates" : [ {
+    "name" : "Alice",
+    "excluded" : false,
+    "aliases" : [ ]
+  }, {
+    "name" : "Bob",
+    "excluded" : false,
+    "aliases" : [ ]
+  } ],
+  "rules" : {
+    "tiebreakMode" : "previousRoundCountsThenRandom",
+    "overvoteRule" : "exhaustImmediately",
+    "winnerElectionMode" : "condorcet",
+    "randomSeed" : "12345",
+    "numberOfWinners" : "2",
+    "multiSeatBottomsUpPercentageThreshold" : "",
+    "decimalPlacesForVoteArithmetic" : "4",
+    "maxSkippedRanksAllowed" : "unlimited",
+    "maxRankingsAllowed" : "max",
+    "nonIntegerWinningThreshold" : false,
+    "doesFirstRoundDetermineThreshold" : false,
+    "hareQuota" : false,
+    "batchElimination" : true,
+    "continueUntilTwoCandidatesRemain" : true,
+    "stopTabulationEarlyAfterRound" : "1",
+    "exhaustOnDuplicateCandidate" : false,
+    "rulesDescription" : "Condorcet with invalid params - should fail validation"
+  }
+}

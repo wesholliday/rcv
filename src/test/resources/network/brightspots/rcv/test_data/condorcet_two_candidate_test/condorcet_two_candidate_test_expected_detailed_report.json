@@ -1,0 +1,45 @@
+{
+  "config" : {
+    "contest" : "Condorcet Two Candidate Test",
+    "date" : "2024-01-01",
+    "generatedBy" : "RCTab 2.0.1",
+    "jurisdiction" : "Test Jurisdiction",
+    "office" : "Test Office"
+  },
+  "jsonFormatVersion" : "1",
+  "results" : {
+    "bestHeadToHeadRecord" : [ {
+      "candidate" : "Alice",
+      "marginOfSmallestLoss" : "N/A"
+    } ],
+    "candidateSummary" : [ {
+      "candidate" : "Alice",
+      "losses" : 0,
+      "ties" : 0,
+      "wins" : 1
+    }, {
+      "candidate" : "Bob",
+      "losses" : 1,
+      "ties" : 0,
+      "wins" : 0
+    } ],
+    "pairwise" : [ {
+      "aAboveB" : 3,
+      "bAboveA" : 2,
+      "candidateA" : "Alice",
+      "candidateB" : "Bob",
+      "margin" : 1,
+      "neitherRanked" : 0,
+      "oneRankedNoPreference" : 0,
+      "tied" : 0,
+      "winner" : "Alice"
+    } ],
+    "winner" : "Alice"
+  },
+  "summary" : {
+    "ballotsWithNoRankings" : 0,
+    "numCandidates" : 2,
+    "numWinners" : 1,
+    "totalNumBallots" : "5"
+  }
+}
