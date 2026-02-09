@@ -197,10 +197,14 @@ final class CondorcetTabulator {
           }
         }
       }
+      // No losses is the best possible result: treat as 0 so it beats any actual loss
+      if (smallestLoss == Integer.MAX_VALUE) {
+        smallestLoss = 0;
+      }
       Logger.info(
           "Candidate \"%s\" smallest loss margin: %s.",
           candidates.get(idx),
-          smallestLoss == Integer.MAX_VALUE ? "none (no losses)" : smallestLoss);
+          smallestLoss == 0 ? "none (no losses)" : smallestLoss);
 
       if (smallestLoss < bestSmallestLoss) {
         bestSmallestLoss = smallestLoss;
