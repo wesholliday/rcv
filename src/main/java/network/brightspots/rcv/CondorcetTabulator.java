@@ -54,6 +54,8 @@ final class CondorcetTabulator {
    * @param margins margins[i][j] = pref[i][j] - pref[j][i]
    * @param wins wins[i] = doubled head-to-head win score (win=2, tie=1, loss=0)
    * @param wasDecidedViaTieBreak true if the winner was determined by the configured tiebreak
+   * @param tiedCandidates candidates included in the final random tiebreak, if one occurred
+   * @param tiebreakExplanation explanation of the final tiebreak, if one occurred
    */
   record CondorcetResult(
       String winner,
@@ -64,7 +66,9 @@ final class CondorcetTabulator {
       int[][] neitherRanked,
       int[][] margins,
       int[] wins,
-      boolean wasDecidedViaTieBreak) {}
+      boolean wasDecidedViaTieBreak,
+      List<String> tiedCandidates,
+      String tiebreakExplanation) {}
 
   /**
    * Determine the winner using the Condorcet method.
@@ -138,7 +142,7 @@ final class CondorcetTabulator {
         int[] wins = computeWins(n, margins);
         return new CondorcetResult(
             candidates.get(i), candidates, pref, tied, oneRankedNoPreference, neitherRanked,
-            margins, wins, false);
+            margins, wins, false, List.of(), null);
       }
     }
 
@@ -175,7 +179,7 @@ final class CondorcetTabulator {
           winner, maxWins / 2.0);
       return new CondorcetResult(
           winner, candidates, pref, tied, oneRankedNoPreference, neitherRanked, margins,
-          wins, false);
+          wins, false, List.of(), null);
     }
 
     // Step 3: Tie for most wins — use smallest loss margin tiebreaker
@@ -222,7 +226,7 @@ final class CondorcetTabulator {
           winner, bestSmallestLoss);
       return new CondorcetResult(
           winner, candidates, pref, tied, oneRankedNoPreference, neitherRanked, margins,
-          wins, false);
+          wins, false, List.of(), null);
     }
 
     // Step 4: Still tied — fall back to configured tiebreak mode
@@ -250,7 +254,7 @@ final class CondorcetTabulator {
         "Candidate \"%s\" won the final tiebreak. %s", winner, tiebreak.getExplanation());
     return new CondorcetResult(
         winner, candidates, pref, tied, oneRankedNoPreference, neitherRanked, margins,
-        wins, true);
+        wins, true, List.copyOf(tiedCandidateNames), tiebreak.getExplanation());
   }
 
   /**

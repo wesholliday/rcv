@@ -6,7 +6,7 @@ Contest,Condorcet Tiebreak Test
 Jurisdiction,Test Jurisdiction
 Office,Test Office
 Date,2024-01-01
-Winner(s),Bob
+Winner(s),Bob*
 
 Contest Summary
 Number to be Elected,1
@@ -31,3 +31,5 @@ Candidate(s) with best head-to-head record,Margin of smallest loss
 Alice,1
 Bob,1
 Carol,1
+
+*Winner selected by random tiebreak after tie for most wins and smallest loss.

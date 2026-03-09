@@ -65,6 +65,14 @@
       "tied" : 0,
       "winner" : "Bob"
     } ],
+    "tiebreak" : {
+      "explanation" : "The candidate was randomly selected.",
+      "randomSeed" : 12345,
+      "selectedCandidate" : "Bob",
+      "tiebreakApplied" : true,
+      "tiebreakMode" : "random",
+      "tiedCandidates" : [ "Alice", "Bob", "Carol" ]
+    },
     "winner" : "Bob"
   },
   "summary" : {
