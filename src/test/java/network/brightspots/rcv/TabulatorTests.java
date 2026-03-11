@@ -1007,6 +1007,8 @@ class TabulatorTests {
         ContestConfig.ValidationError.RULES_CONDORCET_MULTI_WINNER_DISAGREEMENT));
     assertTrue(errors.contains(
         ContestConfig.ValidationError.RULES_CONDORCET_TABULATE_BY_SLICE_DISAGREEMENT));
+    assertTrue(errors.contains(
+        ContestConfig.ValidationError.RULES_CONDORCET_CDF_JSON_DISAGREEMENT));
   }
 
   @Test

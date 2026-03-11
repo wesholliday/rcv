@@ -1537,6 +1537,7 @@ public class GuiConfigController implements Initializable {
       choiceTiebreakMode.getItems().addAll(TiebreakMode.values());
       choiceTiebreakMode.getItems().remove(TiebreakMode.MODE_UNKNOWN);
       choiceTiebreakMode.setDisable(false);
+      checkBoxGenerateCdfJson.setDisable(false);
       // Re-enable voter error rules (may be disabled by Condorcet)
       radioOvervoteAlwaysSkip.setDisable(false);
       radioOvervoteExhaustImmediately.setDisable(false);
@@ -1578,6 +1579,8 @@ public class GuiConfigController implements Initializable {
           textFieldNumberOfWinners.setText("1");
           textFieldStopTabulationEarlyAfterRound.setDisable(true);
           checkBoxCondorcetCountAllRankedOverUnranked.setDisable(false);
+          checkBoxGenerateCdfJson.setSelected(false);
+          checkBoxGenerateCdfJson.setDisable(true);
           choiceTiebreakMode.getItems().clear();
           choiceTiebreakMode.getItems().add(TiebreakMode.RANDOM);
           choiceTiebreakMode.setValue(TiebreakMode.RANDOM);

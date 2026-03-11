@@ -8,7 +8,7 @@
     "contestOffice" : "Test Office",
     "tabulateByBatch" : false,
     "tabulateByPrecinct" : true,
-    "generateCdfJson" : false
+    "generateCdfJson" : true
   },
   "cvrFileSources" : [ {
     "filePath" : "condorcet_invalid_params_test_cvr.csv",

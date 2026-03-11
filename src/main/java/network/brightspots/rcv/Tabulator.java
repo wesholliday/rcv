@@ -898,7 +898,7 @@ final class Tabulator {
     writer.generateContestResultFiles(roundTallies, tallyTransfers, candidateOrder);
     writer.generateBySliceResultsFiles(roundTalliesBySlices, tallyTransfersBySlice, candidateOrder);
 
-    if (config.isGenerateCdfJsonEnabled()) {
+    if (config.isGenerateCdfJsonEnabled() && !config.isCondorcetEnabled()) {
       try {
         writer.generateCdfJson(castVoteRecords);
       } catch (RoundSnapshotDataMissingException exception) {

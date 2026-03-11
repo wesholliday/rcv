@@ -870,6 +870,13 @@ class ContestConfig {
                 "tabulateByPrecinct and tabulateByBatch can't be enabled when "
                     + "winnerElectionMode is \"%s\"!", winnerMode);
           }
+          if (isGenerateCdfJsonEnabled()) {
+            validationErrors.add(
+                ValidationError.RULES_CONDORCET_CDF_JSON_DISAGREEMENT);
+            Logger.severe(
+                "generateCdfJson can't be true when winnerElectionMode is \"%s\"!",
+                winnerMode);
+          }
         }
       } else { // numberOfWinners == 0
         if (!isMultiSeatBottomsUpWithThresholdEnabled()) {
@@ -1421,7 +1428,8 @@ class ContestConfig {
     RULES_CONDORCET_STOP_EARLY_AFTER_ROUND_DISAGREEMENT,
     RULES_CONDORCET_COUNT_ALL_RANKED_REQUIRES_CONDORCET,
     RULES_CONDORCET_TIEBREAK_NOT_RANDOM,
-    RULES_CONDORCET_TABULATE_BY_SLICE_DISAGREEMENT
+    RULES_CONDORCET_TABULATE_BY_SLICE_DISAGREEMENT,
+    RULES_CONDORCET_CDF_JSON_DISAGREEMENT
   }
 
   enum Provider {
